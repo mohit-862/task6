@@ -21,15 +21,22 @@
 
     <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
-            <span class="navbar-brand">Hello {{user.get_full_name}}</span>
-            <form class="d-flex"  action = "take_query" method = "post" role="search">
+            <span class="navbar-brand">Hello {{request.user.get_full_name}}</span>
+            <form class="d-flex" role="search" method="get" action="{% url 'products' %}">
                  {% csrf_token %}
                 <select class="form-select" name="filter" id="inputGroupSelect01">
-                    <option selected>choose filter</option>
+                    <option></option>
                     <option value="asc">low to high price</option>
                     <option value="desc">high to low price</option>
                 </select>
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <select class="form-select" name="category" id="inputGroupSelect02">
+                    <option></option>
+                    {% for cat in categories %}
+                    <option value="{{cat.id}}">{{cat.name}}</option>
+                    {% endfor %}
+                </select>
+
+                <input class="form-control me-2" type="search" name ="search" placeholder="Search" aria-label="Search" />
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 
@@ -51,7 +58,7 @@
                 <a href="{{product.get_absolute_url}}" style="text-decoration: none;">
                     <div class="col">
                         <div class="card h-100">
-                            <img src="{{ product.product_img.url }}" class="card-img-top" alt="image for {{product.title}}">
+                            <img src="{{ product.product_img.url }}" class="card-img-top" alt="image for {{product.title}}" >
                             <div class="card-body">
                                 <h5 class="card-title">{{product.title}}</h5>
                                 <p class="card-text">{{product.description}}</p>

@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import home,products,user_login,user_logout,user_register,product_details,add_products,seller_dashboard,delete_product,take_query
+from .views import home,products,user_login,user_logout,user_register,product_details,add_products,seller_dashboard,delete_product
 
 urlpatterns = [
     #products
@@ -8,8 +8,7 @@ urlpatterns = [
 
     #user paths
     path('products/',products,name="products"),
-    path('products/<slug:slug>/',product_details,name="product_details"),
-    path('products/take_query',take_query,name="take_query"),
+    path('product/<slug:slug>/',product_details,name="product_details"),
 
 
     #seller_paths
