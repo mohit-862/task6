@@ -117,19 +117,7 @@ def products(request):
         products = products.order_by('price')
     elif order == 'desc':
         products = products.order_by('-price')
-        
 
-    # if request.method == 'POST':
-    #     query = request.POST.get('search',"")
-    #     order = request.POST.get('filter',"")
-    #     category = request.POST.get('category',"")
-    #     print(query,type(category),order)
-    #     if category:
-    #         products = Product.objects.filter(category_id = category)
-    #     if order == 'asc':  
-    #         products = Product.objects.all().order_by('price')
-    #     elif order == 'desc':
-    #         products = Product.objects.all().order_by('-price')
     paginator = Paginator(products,5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)          
