@@ -52,8 +52,6 @@ def products(request):
 
 
 
-
-
 def product_details(request,slug):
     title  = (slug.replace("-"," ")).title()
     product = Product.objects.get(title = title)
@@ -67,35 +65,19 @@ def product_details(request,slug):
 def take_query(request):
     user = request.session['name']
     if request.method == 'POST':
-        products_by_category = []
         query = request.POST.get('search',"")
         print(query)
         order = request.POST['filter']
         print(order)
         if order == 'asc':
             products = Product.objects.all().order_by('price')
-        elif  order == 'desc':
+        elif order == 'desc':
             products = Product.objects.all().order_by('-price')
-        elif order == 'category':
-            all = all_category()
-            category = list(all.get('categories'))
-            for i in category:
-               products_by_category.append(Product.objects.filter(category = i.name))
-            products = products_by_category
-        print(products)
         paginator = Paginator(products,5)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)       
         return render(request,'app/products.html',{'page_obj':page_obj,'user':user})
     return redirect('products')
-
-        
-
-
-
-
-
-
 
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -152,15 +134,14 @@ def delete_product(request,product_id):
         context.update({'page_obj':page_obj,'user': user})
         img_path = obj.product_img.url
         try:
+            os.remove(BASE_DIR/img_path)
             obj.delete()
             messages.add_message(request,messages.INFO,"Product deleted successfully")
+        except FileNotFoundError:
+            messages.add_message(request,messages.INFO,"Product is not found")
         except:
             messages.add_message(request,messages.INFO,"Product is not deleted")
-        else:
-            try:
-                os.remove(BASE_DIR/img_path)
-            except FileNotFoundError:
-                messages.add_message(request,messages.INFO,"Product is not found")
+       
         return render(request,'app/seller_dashboard.html',context)
         # return redirect('seller_dashboard',context)
     else:
