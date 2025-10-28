@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Products</title>
+
+    <style>
+        body {
+            padding: 5px;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+
+<body>
+    <!-- Navbar -->
+
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <span class="navbar-brand">Hello {{user.get_full_name}}</span>
+            <form class="d-flex"  action = "take_query" method = "post" role="search">
+                 {% csrf_token %}
+                <select class="form-select" name="filter" id="inputGroupSelect01">
+                    <option selected>choose filter</option>
+                    <option value="asc">low to high price</option>
+                    <option value="desc">high to low price</option>
+                    <option value="category">by category</option>
+                </select>
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
+                <a href="{% url 'user_logout' %}" style="text-decoration: none;" class="d-flex" role="search">
+                    <button class="btn btn-outline-success" type="submit">LOGOUT</button>
+                </a>
+
+
+        </div>
+    </nav>
+    <br>
+
+
+
+    <!-- Products -->
+    <div class="row row-cols-1 row-cols-md-4 g-4" style="width: 50rem;">
+        {% if page_obj %}
+            {% for product in page_obj %}
+                <a href="{{product.get_absolute_url}}" style="text-decoration: none;">
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="{{ product.product_img.url }}" class="card-img-top" alt="image for {{product.title}}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{product.title}}</h5>
+                                <p class="card-text">{{product.description}}</p>
+                                <p class="card-text">{{product.price}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+    <!-- pagination -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
